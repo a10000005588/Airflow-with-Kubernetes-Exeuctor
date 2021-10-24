@@ -1,0 +1,92 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: airflow-executor
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      name: airflow-executor
+  strategy:
+    type: Recreate # Prevent pod keep pending due the the limitation of resources.
+  template:
+    metadata:
+      labels:
+        name: airflow-executor
+    spec:
+      automountServiceAccountToken: true
+      containers:
+      - name: airflow
+        image: kubegut/airflowk8sdemo:latest
+        imagePullPolicy: Always
+        command: 
+        - sh
+        - "-c"
+        - | 
+          /bin/bash <<'EOF'
+          airflow users create -u airflow -p airflow -e test@test.com -f test -l test -r Admin
+          airflow webserver -p 8000
+          
+          EOF
+        resources:
+          requests:
+            memory: "900Mi"
+            cpu: "400m"
+          limits:
+            memory: "2500Mi"
+            cpu: "500m"
+        envFrom:
+        # Airflow system config
+        - configMapRef:
+            name: airflow-config
+        # Airflow dag variables
+        - configMapRef:
+            name: airflow-variables
+        volumeMounts:
+        - name: airflow-logs
+          mountPath: /airflow/logs/
+          mountPropagation: None
+      - name: airflow-scheduler
+        image: kubegut/airflowk8sdemo:latest # Use your airflow docker image here, either selfbuilt with dags or apache/airflow:10.10.12
+        imagePullPolicy: Always
+        args:
+        - scheduler
+        resources:
+          requests:
+            memory: "900Mi"
+            cpu: "450m"
+          limits:
+            memory: "1600Mi"
+            cpu: "600m"
+        envFrom:
+        - configMapRef:
+            name: airflow-scheduler-config
+        terminationMessagePath: /dev/termination-log
+        terminationMessagePolicy: File
+        volumeMounts:
+        - name: airflow-logs
+          mountPath: /airflow/logs/
+          mountPropagation: None
+      dnsPolicy: ClusterFirst
+      initContainers:
+      - command: ['airflow', 'db', 'init']
+        # Use your airflow docker image here, either self-built with dags or apache/airflow:10.10.12
+        image: kubegut/airflowk8sdemo:latest  
+        imagePullPolicy: Always
+        envFrom:
+        - configMapRef:
+            name: airflow-initdb-config
+          # Airflow dag variables
+        - configMapRef:
+            name: airflow-variables
+        name: airflow-initdb
+      restartPolicy: Always
+      schedulerName: default-scheduler
+      securityContext: {}
+      shareProcessNamespace: false
+      terminationGracePeriodSeconds: 600
+      volumes:
+      - emptyDir: {}
+        name: airflow-data
+      - emptyDir: {}
+        name: airflow-logs
