@@ -1,0 +1,23 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: airflow-config
+data:
+  AIRFLOW_HOME: /airflow/log
+  AIRFLOW__CORE__SQL_ALCHEMY_CONN: postgresql://postgres:postgres@airflow-db-executor:5432/postgres
+  AIRFLOW__KUBERNETES__DELETE_WORKER_PODS: 'true'
+  AIRFLOW__KUBERNETES__POD_TEMPLATE_FILE: /airflow/worker/base/pod/airflow-worker-based.yaml
+  AIRFLOW__CORE__EXECUTOR: KubernetesExecutor
+  AIRFLOW__WEBSERVER__AUTHENTICATE: 'true'
+  AIRFLOW__WEBSERVER__AUTH_BACKEND: airflow.contrib.auth.backends.password_auth
+  AIRFLOW__API__AUTH_BACKEND: airflow.api.auth.backend.basic_auth
+  # [William] Supply your container worker image here, either selfbuilt "airflow" with dags or apache/airflow
+  AIRFLOW__KUBERNETES__WORKER_CONTAINER_REPOSITORY: 'asia.gcr.io/lupin-staging/app-external-airflow-executor'
+  AIRFLOW__KUBERNETES__WORKER_CONTAINER_TAG: 'latest'
+  AIRFLOW__KUBERNETES__NAMESPACE: default
+  AIRFLOW__KUBERNETES__WORKER_SERVICE_ACCOUNT_NAME: default
+  AIRFLOW__KUBERNETES__IN_CLUSTER: 'true'
+  AIRFLOW__KUBERNETES__DAGS_IN_IMAGE: 'true'
+  AIRFLOW__KUBERNETES__RUN_AS_USER: '50000'
+  AIRFLOW__LOGGING__BASE_LOG_FOLDER: /airflow/log
+  AIRFLOW__LOGGING__REMOTE_LOGGING: 'true'
