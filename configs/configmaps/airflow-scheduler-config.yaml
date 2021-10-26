@@ -2,21 +2,20 @@ apiVersion: v1
 kind: ConfigMap
 metadata:
   name: airflow-scheduler-config
-  namespace: rbs
 data:
-  AIRFLOW_HOME: /airflow
+  AIRFLOW_HOME: /opt/airflow
   AIRFLOW__CORE__SQL_ALCHEMY_CONN: postgresql://postgres:postgres@airflow-db-executor:5432/postgres
-  AIRFLOW__KUBERNETES__DELETE_WORKER_PODS: 'True'
-  AIRFLOW__KUBERNETES__POD_TEMPLATE_FILE: /airflow/pod_templates/airflow-worker-based.yaml
+  AIRFLOW__KUBERNETES__DELETE_WORKER_PODS: 'true'
+  AIRFLOW__KUBERNETES__POD_TEMPLATE_FILE: /opt/airflow/pod_templates/airflow-worker-based.yaml
   # The amount of time (in secs) webserver will wait for initial handshake
   # while fetching logs from other worker machine
   AIRFLOW__KUBERNETES_ENVIRONMENT_VARIABLES__AIRFLOW__WEBSERVER__LOG_FETCH_TIMEOUT_SEC: '15'
   AIRFLOW__CORE__EXECUTOR: KubernetesExecutor
-  AIRFLOW__WEBSERVER__AUTHENTICATE: 'True'
+  AIRFLOW__WEBSERVER__AUTHENTICATE: 'true'
   AIRFLOW__WEBSERVER__AUTH_BACKEND: airflow.contrib.auth.backends.password_auth
   AIRFLOW__API__AUTH_BACKEND: airflow.api.auth.backend.basic_auth
   # Supply your container worker image here, either selfbuilt "airflow image" with dags or apache/airflow
-  AIRFLOW__KUBERNETES__WORKER_CONTAINER_REPOSITORY: 'asia.gcr.io/lupin-staging/app-external-airflow-executor'
+  AIRFLOW__KUBERNETES__WORKER_CONTAINER_REPOSITORY: 'kubegut/airflowk8sdemo'
   AIRFLOW__KUBERNETES__WORKER_CONTAINER_TAG: 'latest'
   AIRFLOW__KUBERNETES__NAMESPACE: default
   AIRFLOW__KUBERNETES__WORKER_SERVICE_ACCOUNT_NAME: default
@@ -24,6 +23,6 @@ data:
   AIRFLOW__KUBERNETES__DAGS_IN_IMAGE: 'true'
   AIRFLOW__KUBERNETES__RUN_AS_USER: '50000'
   # Log Setting
-  AIRFLOW__LOGGING__BASE_LOG_FOLDER: /airflow/log
-  AIRFLOW__LOGGING__REMOTE_LOGGING: 'True'
+  AIRFLOW__LOGGING__BASE_LOG_FOLDER: /opt/airflow/log
+  AIRFLOW__LOGGING__REMOTE_LOGGING: 'false'
   AIRFLOW__LOGGING_LOGGING_LEVEL: 'DEBUG'

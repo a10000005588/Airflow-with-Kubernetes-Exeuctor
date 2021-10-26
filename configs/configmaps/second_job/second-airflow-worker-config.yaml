@@ -1,0 +1,8 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: second-airflow-worker-config
+data:
+  AIRFLOW__LOGGING__REMOTE_LOGGING: 'true'
+  AIRFLOW__LOGGING__LOGGING_LEVEL: 'DEBUG'
+  AIRFLOW__KUBERNETES__RUN_AS_USER: '1000'

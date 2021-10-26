@@ -1,0 +1,37 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: second-airflow-worker-base
+spec:
+  restartPolicy: Never
+  containers:
+    # Each Airflow pod_template_file must have a container named "base" at the pod.spec.containers[0] position
+    - name: base
+      image: kubegut/airflowk8sdemo:latest
+      imagePullPolicy: Always
+      ports: []
+      command: []
+      envFrom:
+      - configMapRef:
+      # For airflow system use
+          name: second-airflow-worker-config
+      resources:
+        limits:
+          cpu: 500m
+          memory: "2500Mi"
+        requests:
+          cpu: 300m
+          memory: "1024Mi"
+      volumeMounts:
+        - name: google-cloud-key
+          mountPath: /var/secrets/google
+          readOnly: true
+  volumes:
+    - emptyDir: {}
+      name: airflow-data
+    - emptyDir: {}
+      name: airflow-logs
+    - name: google-cloud-key
+      secret:
+        secretName: google-cloud-key
+        

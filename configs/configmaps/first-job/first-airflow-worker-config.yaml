@@ -1,0 +1,8 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: first-airflow-worker-config
+data:
+  AIRFLOW__LOGGING__REMOTE_LOGGING: 'false'
+  AIRFLOW__LOGGING__LOGGING_LEVEL: 'INFO'
+  AIRFLOW__KUBERNETES__RUN_AS_USER: '2000'

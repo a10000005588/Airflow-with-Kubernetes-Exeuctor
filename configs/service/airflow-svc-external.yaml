@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: airflow-executor-svc-external
+spec:
+  type: NodePort
+  ports:
+  - nodePort: 31727
+    port: 80
+    protocol: TCP
+    targetPort: 8000
+  selector:
+    name: airflow-executor

@@ -44,7 +44,7 @@ spec:
             name: airflow-variables
         volumeMounts:
         - name: airflow-logs
-          mountPath: /airflow/logs/
+          mountPath: /opt/airflow/logs/
           mountPropagation: None
       - name: airflow-scheduler
         image: kubegut/airflowk8sdemo:latest # Use your airflow docker image here, either selfbuilt with dags or apache/airflow:10.10.12
@@ -65,7 +65,7 @@ spec:
         terminationMessagePolicy: File
         volumeMounts:
         - name: airflow-logs
-          mountPath: /airflow/logs/
+          mountPath: /opt/airflow/logs/
           mountPropagation: None
       dnsPolicy: ClusterFirst
       initContainers:
