@@ -9,11 +9,10 @@ spec:
     - name: base
       image: kubegut/airflowk8sdemo:latest
       imagePullPolicy: Always
-      ports: []
       command: []
+      ports: []
       envFrom:
       - configMapRef:
-      # For airflow system use
           name: airflow-worker-base-config
       resources:
         limits:

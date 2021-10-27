@@ -4,7 +4,7 @@ metadata:
   name: airflow-worker-base-config
 data:
   AIRFLOW__CORE__SQL_ALCHEMY_CONN: postgresql://postgres:postgres@airflow-db-executor:5432/postgres
-  AIRFLOW__LOGGING__REMOTE_LOGGING: 'true'
+  AIRFLOW__LOGGING__REMOTE_LOGGING: 'false'
   AIRFLOW__LOGGING__LOGGING_LEVEL: 'INFO'
   AIRFLOW__KUBERNETES__RUN_AS_USER: '50000'
   SHARED_CONFIG: "test"

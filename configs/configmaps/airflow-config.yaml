@@ -5,13 +5,14 @@ metadata:
 data:
   AIRFLOW_HOME: /opt/airflow
   AIRFLOW__CORE__SQL_ALCHEMY_CONN: postgresql://postgres:postgres@airflow-db-executor:5432/postgres
-  AIRFLOW__KUBERNETES__DELETE_WORKER_PODS: 'true'
-  AIRFLOW__KUBERNETES__POD_TEMPLATE_FILE: /opt/airflow/worker/base/pod/airflow-worker-based.yaml
+  # Prevent log loss, keep completed pod in cluster
+  AIRFLOW__KUBERNETES__DELETE_WORKER_PODS: 'false'
+  AIRFLOW__KUBERNETES__POD_TEMPLATE_FILE: /opt/airflow/worker/base/pod/airflow-worker-base.yaml
   AIRFLOW__CORE__EXECUTOR: KubernetesExecutor
   AIRFLOW__WEBSERVER__AUTHENTICATE: 'true'
   AIRFLOW__WEBSERVER__AUTH_BACKEND: airflow.contrib.auth.backends.password_auth
   AIRFLOW__API__AUTH_BACKEND: airflow.api.auth.backend.basic_auth
-  # [William] Supply your container worker image here, either selfbuilt "airflow" with dags or apache/airflow
+  # Supply your container worker image here, either selfbuilt "airflow" with dags or apache/airflow
   AIRFLOW__KUBERNETES__WORKER_CONTAINER_REPOSITORY: 'kubegut/airflowk8sdemo'
   AIRFLOW__KUBERNETES__WORKER_CONTAINER_TAG: 'latest'
   AIRFLOW__KUBERNETES__NAMESPACE: default

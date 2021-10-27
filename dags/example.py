@@ -12,19 +12,15 @@ dag = DAG(
     catchup=False,
     default_args={
         "owner": "Test",
-        "depends_on_past": False,
         "start_date": datetime(2020, 8, 7),
-        "email_on_failure": False,
-        "email_on_retry": False,
         "retries": 2,
         "retry_delay": timedelta(seconds=30),
-        "sla": timedelta(hours=23),
     },
 )
 
 # Jobs
 passing1 = KubernetesPodOperator(
-    namespace='rbs',
+    namespace='default',
     image="python:3.6",
     cmds=["python","-c"],
     arguments=["for r in range(10): print('helloworld')"],
@@ -37,7 +33,7 @@ passing1 = KubernetesPodOperator(
 
 # Jobs
 passing2 = KubernetesPodOperator(
-    namespace='rbs',
+    namespace='default',
     image="python:3.6",
     cmds=["python","-c"],
     arguments=["for r in range(20): print('helloworld')"],

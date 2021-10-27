@@ -30,11 +30,11 @@ spec:
           EOF
         resources:
           requests:
-            memory: "900Mi"
+            memory: "1200Mi"
             cpu: "400m"
           limits:
-            memory: "2500Mi"
-            cpu: "500m"
+            memory: "1400Mi"
+            cpu: "600m"
         envFrom:
         # Airflow system config
         - configMapRef:
@@ -53,14 +53,15 @@ spec:
         - scheduler
         resources:
           requests:
-            memory: "900Mi"
-            cpu: "450m"
+            memory: "1000Mi"
+            cpu: "400m"
           limits:
-            memory: "1600Mi"
+            memory: "1200Mi"
             cpu: "600m"
         envFrom:
+        # Airflow system config
         - configMapRef:
-            name: airflow-scheduler-config
+            name: airflow-config
         terminationMessagePath: /dev/termination-log
         terminationMessagePolicy: File
         volumeMounts:
@@ -74,9 +75,10 @@ spec:
         image: kubegut/airflowk8sdemo:latest  
         imagePullPolicy: Always
         envFrom:
+        # Airflow system config
         - configMapRef:
-            name: airflow-initdb-config
-          # Airflow dag variables
+            name: airflow-config
+        # Airflow dag variables
         - configMapRef:
             name: airflow-variables
         name: airflow-initdb
@@ -90,3 +92,8 @@ spec:
         name: airflow-data
       - emptyDir: {}
         name: airflow-logs
+
+
+  
+
+
