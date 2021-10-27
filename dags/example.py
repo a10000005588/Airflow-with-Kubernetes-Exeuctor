@@ -1,8 +1,10 @@
 import logging
+import os
 from datetime import datetime, timedelta
 
 from airflow import DAG
 from airflow.contrib.operators.kubernetes_pod_operator import KubernetesPodOperator
+from kubernetes.client import models as k8s
 
 logger = logging.getLogger("airflow.task")
 
@@ -19,29 +21,27 @@ dag = DAG(
 )
 
 # Jobs
-passing1 = KubernetesPodOperator(
+task1 =  KubernetesPodOperator(
     namespace='default',
-    image="python:3.6",
+    image="python:2.7",
     cmds=["python","-c"],
-    arguments=["for r in range(10): print('helloworld')"],
-    labels={"foo": "bar"},
-    name="passing-test",
-    task_id="passing-task1",
+    arguments=["for r in range(3): print('running script by ptyhon 2.7')"],
+    name="task1",
+    task_id="task1",
     get_logs=True,
     dag=dag
 )
-
 # Jobs
-passing2 = KubernetesPodOperator(
+task2 =  KubernetesPodOperator(
     namespace='default',
     image="python:3.6",
     cmds=["python","-c"],
-    arguments=["for r in range(20): print('helloworld')"],
-    labels={"foo": "bar"},
-    name="passing-test",
-    task_id="passing-task2",
+    arguments=["for r in range(3): print('running script by python 3.6')"],
+    name="task2",
+    task_id="task2",
     get_logs=True,
     dag=dag
 )
 
-passing1 >> passing2
+
+task1 >> task2

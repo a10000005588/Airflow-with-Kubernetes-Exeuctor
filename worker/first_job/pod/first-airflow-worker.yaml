@@ -17,11 +17,15 @@ spec:
           name: first-airflow-worker-config
       resources:
         limits:
-          cpu: 500m
-          memory: "2500Mi"
+          cpu: 200m
+          memory: "512Mi"
         requests:
           cpu: 300m
           memory: "1024Mi"
+      volumeMounts:
+        - name: airflow-logs
+          mountPath: /opt/airflow/logs/
+          mountPropagation: None
   volumes:
     - emptyDir: {}
       name: airflow-data
